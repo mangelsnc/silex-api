@@ -1,0 +1,13 @@
+{
+    "require":{
+        "silex/silex":  "~1.1"
+    },
+    "autoload":{
+        "psr-0":{
+            "Album\\": "src/mangelsnc/"
+        }
+    },
+    "require-dev": {
+        "symfony/browser-kit": ">=2.3,<2.4-dev"
+    }
+}  
