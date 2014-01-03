@@ -58,7 +58,7 @@ class AlbumController implements ControllerProviderInterface
         });
 
         //Create new album
-        $controllers->post('/new', function(Request $request, Application $app) {
+        $controllers->post('/', function(Request $request, Application $app) {
             $album = new Album();
             $album->setTitle($request->request->get('title'));
             $album->setAuthor($request->request->get('author'));
