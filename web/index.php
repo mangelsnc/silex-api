@@ -4,7 +4,6 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Album\Album;
 use Album\Controller\AlbumController;
 
 $app = new Silex\Application();
@@ -19,6 +18,10 @@ $app->before(function (Request $request) {
     if('application/json' != $request->headers->get("Accept")) {
         return new Response("Unsuported format", 400);
     }
+});
+
+$app->get("/", function(){
+    return new Response();
 });
 
 $app->mount("/albums", new AlbumController());
