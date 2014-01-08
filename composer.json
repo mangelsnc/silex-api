@@ -4,8 +4,7 @@
     },
     "autoload":{
         "psr-0":{
-            "Album\\": "src/mangelsnc/",
-            "Authentication\\": "src/mangelsnc/"
+            "Album\\": "src/mangelsnc/"
         }
     },
     "require-dev": {
