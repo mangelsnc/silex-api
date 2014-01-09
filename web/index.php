@@ -9,6 +9,14 @@ use Album\Controller\AlbumController;
 $app = new Silex\Application();
 $app['db.path'] = __DIR__ . '/db/';
 
+$app->register(new Silex\Provider\DoctrineServiceProvider(), array(
+    'db.options' => array(
+        'driver'   => 'pdo_sqlite',
+        'path'     => __DIR__.'/../data/albums.db',
+    )
+));
+
+
 $app->before(function (Request $request) {
     if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
         $data = json_decode($request->getContent(), true);
