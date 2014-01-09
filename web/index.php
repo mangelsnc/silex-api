@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Album\Controller\AlbumController;
 
 $app = new Silex\Application();
-$app['db.path'] = __DIR__ . '/db/';
+$app['db.path'] = __DIR__ . '/../data/';
 
 $app->before(function (Request $request) {
     if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {

@@ -10,7 +10,7 @@ class AlbumControllerTest extends WebTestCase
     {
         require __DIR__ . '/../web/index.php';
         file_put_contents(
-            __DIR__ . '/../web/db/test.json', 
+            __DIR__ . '/../data/test.json', 
             "{title: 'Sgt Peppers', author: 'The Beatles', year: 1978, genre: 'Pop'}");
 
         return $app;
@@ -97,7 +97,7 @@ class AlbumControllerTest extends WebTestCase
         );
 
         $album = json_decode($client->getResponse()->getContent());
-        unlink(__DIR__ . '/../web/db/' . $album->uid . '.json');
+        unlink(__DIR__ . '/../data/' . $album->uid . '.json');
 
         $this->assertEquals(201, $client->getResponse()->getStatusCode());
     }
