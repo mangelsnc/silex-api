@@ -54,7 +54,7 @@ class AlbumControllerTest extends WebTestCase
         
         $client->request(
             'GET', 
-            '/albums/5B92929C', 
+            '/albums/test', 
             array(), 
             array(), 
             array('HTTP_ACCEPT' => 'application/json')
