@@ -9,9 +9,6 @@ class AlbumControllerTest extends WebTestCase
     public function createApplication()
     {
         require __DIR__ . '/../web/index.php';
-        file_put_contents(
-            __DIR__ . '/../data/test.json', 
-            "{title: 'Sgt Peppers', author: 'The Beatles', year: 1978, genre: 'Pop'}");
 
         return $app;
     }
@@ -96,10 +93,7 @@ class AlbumControllerTest extends WebTestCase
             ))
         );
 
-        $album = json_decode($client->getResponse()->getContent());
-        unlink(__DIR__ . '/../data/' . $album->uid . '.json');
-
-        $this->assertEquals(201, $client->getResponse()->getStatusCode());
+        $this->assertEquals(201, $statusCode);
     }
 
     public function testPutAnAlbumShouldReturns200()
@@ -107,8 +101,8 @@ class AlbumControllerTest extends WebTestCase
         $client = $this->createClient();
 
         $client->request(
-            'PUT',
-            '/albums/test',
+            'POST',
+            '/albums/',
             array(),
             array(),
             array('HTTP_ACCEPT' => 'application/json', 'CONTENT_TYPE' => 'application/json'),
@@ -120,7 +114,25 @@ class AlbumControllerTest extends WebTestCase
             ))
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $album = json_decode($client->getResponse()->getContent());
+
+        $client->request(
+            'PUT',
+            '/albums/' . $album->uid,
+            array(),
+            array(),
+            array('HTTP_ACCEPT' => 'application/json', 'CONTENT_TYPE' => 'application/json'),
+            json_encode(array(
+                'title' => 'Sgt Peppers',
+                'author' => 'The Beatles',
+                'year' => '1978',
+                'genre' => 'Pop'
+            ))
+        );
+
+        $statusCode = $client->getResponse()->getStatusCode();
+        
+        $this->assertEquals(200, $statusCode);
     }
 
     public function testPutAnInexistentAlbumShouldReturns404()
@@ -139,7 +151,9 @@ class AlbumControllerTest extends WebTestCase
             ))
         );
 
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $statusCode = $client->getResponse()->getStatusCode();
+        
+        $this->assertEquals(404, $statusCode);
     }
 
     public function testDeleteAnAlbumShouldReturns204()
@@ -147,8 +161,24 @@ class AlbumControllerTest extends WebTestCase
         $client = $this->createClient();
 
         $client->request(
+            'POST',
+            '/albums/',
+            array(),
+            array(),
+            array('HTTP_ACCEPT' => 'application/json', 'CONTENT_TYPE' => 'application/json'),
+            json_encode(array(
+                'title' => 'Sgt Peppers',
+                'author' => 'The Beatles',
+                'year' => '1978',
+                'genre' => 'Pop'
+            ))
+        );
+
+        $album = json_decode($client->getResponse()->getContent());
+
+        $client->request(
             'DELETE',
-            '/albums/test',
+            '/albums/' . $album->uid,
             array(),
             array(),
             array('HTTP_ACCEPT' => 'application/json')

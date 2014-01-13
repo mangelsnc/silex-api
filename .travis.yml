@@ -9,5 +9,5 @@ before_script:
   - wget http://getcomposer.org/composer.phar
   - php composer.phar install
 
-script: phpunit
+script: chmod 666 data/albums.db; phpunit
 

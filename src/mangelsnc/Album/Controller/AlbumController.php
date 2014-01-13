@@ -6,6 +6,7 @@ use Album\Album;
 use Silex\Application;
 use Silex\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class AlbumController implements ControllerProviderInterface
 {
@@ -15,44 +16,50 @@ class AlbumController implements ControllerProviderInterface
 
         //Get all the albums
         $controllers->get('/', function(Request $request, Application $app) {
-            $albums = array();
-
-            $db = scandir($app['db.path']);
-            array_shift($db);
-            array_shift($db);
-
-            foreach($db as $album) {
-                $albums[] = json_decode(file_get_contents($app['db.path'] . $album));
-            }
+            $sql = "SELECT * FROM albums";
+            $albums = $app['db']->fetchAll($sql);
 
             return $app->json($albums, 200);
         });
 
         //Get single album
         $controllers->get('/{uid}', function(Request $request, Application $app, $uid) {
-            if(!file_exists($app['db.path'] . $uid . '.json')) {
-                $app->abort(404, 'Album does not exist');    
-            }
+            $sql = "SELECT * FROM albums WHERE uid = ?";
+            $album = $app['db']->fetchAssoc($sql, array($uid));
 
-            $album = json_decode(file_get_contents($app['db.path'] . $uid . '.json'));
+            if(!$album) {
+                return new Response("Album not found", 404);
+            }
 
             return $app->json($album, 200);
         });
 
         //Update an album
         $controllers->put('/{uid}', function(Request $request, Application $app, $uid) {
-            if(!file_exists($app['db.path'] . $uid . '.json')) {
-                $app->abort(404, 'Album does not exist');    
+            $sql = "SELECT * FROM albums WHERE uid = ?";
+            $album = $app['db']->fetchAssoc($sql, array($uid));
+
+            if(!$album) {
+                return new Response("Album not found", 404);   
             }
 
             $album = new Album();
-            $album->setUID($request->request->get('uid'));
-            $album->setTitle($request->request->get('title'));
-            $album->setAuthor($request->request->get('author'));
-            $album->setYear($request->request->get('year'));
-            $album->setGenre($request->request->get('genre'));   
+            $album->setUID($uid);
+            $album->setTitle($request->request->get('title') ? : null);
+            $album->setAuthor($request->request->get('author') ? : null);
+            $album->setYear($request->request->get('year') ? : null);
+            $album->setGenre($request->request->get('genre') ? : null);
             
-            file_put_contents($app['db.path'] . $uid . '.json', $album->toJSON());
+            //$sql = "UPDATE albums SET title = ?, author = ?, year = ?, genre = ? WHERE uid = ?";
+            $app['db']->update('albums', array(
+                    'title' => $album->getTitle(),
+                    'author' => $album->getAuthor(),
+                    'year' => $album->getYear(),
+                    'genre' => $album->getGenre()
+                ),array(
+                    'uid' => $uid
+                )
+            );
 
             return $app->json($album->toArray(), 200); 
         });
@@ -60,23 +67,34 @@ class AlbumController implements ControllerProviderInterface
         //Create new album
         $controllers->post('/', function(Request $request, Application $app) {
             $album = new Album();
-            $album->setTitle($request->request->get('title'));
-            $album->setAuthor($request->request->get('author'));
-            $album->setYear($request->request->get('year'));
-            $album->setGenre($request->request->get('genre'));   
+            $album->setTitle($request->request->get('title') ? : null);
+            $album->setAuthor($request->request->get('author') ? : null);
+            $album->setYear($request->request->get('year') ? : null);
+            $album->setGenre($request->request->get('genre') ? : null);
             
-            file_put_contents($app['db.path'] . $album->getUID() . '.json', $album->toJSON());
+            $app['db']->insert('albums', array(
+                'uid' => $album->getUID(),
+                'title' => $album->getTitle(),
+                'author' => $album->getAuthor(),
+                'year' => $album->getYear(),
+                'genre' => $album->getGenre()
+            ));
 
             return $app->json($album->toArray(), 201);
         });
 
         //Delete an album
         $controllers->delete('/{uid}', function(Request $request, Application $app, $uid) {
-            if(!file_exists($app['db.path'] . $uid . '.json')) {
-                $app->abort(404, 'Album does not exist');    
+            $sql = "SELECT * FROM albums WHERE uid = ?";
+            $album = $app['db']->fetchAssoc($sql, array($uid));
+
+            if(!$album) {
+                return new Response("Album not found", 404);   
             }
             
-            unlink($app['db.path'] . $uid . '.json');
+            $app['db']->delete('albums', array(
+                'uid' => $uid
+            ));
             
             return $app->json(array(), 204);
         });        
