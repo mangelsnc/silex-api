@@ -51,7 +51,7 @@ class AlbumControllerTest extends WebTestCase
         
         $client->request(
             'GET', 
-            '/albums/test', 
+            '/albums/25ABCA6E', 
             array(), 
             array(), 
             array('HTTP_ACCEPT' => 'application/json')
@@ -92,6 +92,7 @@ class AlbumControllerTest extends WebTestCase
                 'genre' => 'Pop'
             ))
         );
+        $statusCode = $client->getResponse()->getStatusCode();
 
         $this->assertEquals(201, $statusCode);
     }
