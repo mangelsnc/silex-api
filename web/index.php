@@ -2,6 +2,9 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Album\Controller\AlbumController;
@@ -32,5 +35,9 @@ $app->get("/", function(){
     return new Response();
 });
 
-$app->mount("/albums", new AlbumController());
-$app->run();
+$app->mount('/oauth', new OAuth2Server\OAuth());
+$app->mount('/albums', new AlbumController());
+
+$request = OAuth2\HttpFoundationBridge\Request::createFromGlobals();
+
+$app->run($request);
