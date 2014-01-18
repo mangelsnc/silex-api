@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . "/../vendor/autoload.php";
+require __DIR__ . "/../../../../vendor/autoload.php";
 
 use Silex\WebTestCase;
 
@@ -8,7 +8,7 @@ class AlbumControllerTest extends WebTestCase
 {
     public function createApplication()
     {
-        require __DIR__ . '/../web/index.php';
+        require __DIR__ . '/../../../../web/index.php';
 
         return $app;
     }
