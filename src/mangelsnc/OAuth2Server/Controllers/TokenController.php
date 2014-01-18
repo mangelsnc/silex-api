@@ -4,7 +4,7 @@ namespace OAuth2Server\Controllers;
 
 use Silex\Application;
 
-class Token
+class TokenController
 {
     static public function addRoutes($routing)
     {
@@ -15,7 +15,7 @@ class Token
     {
         $server = $app['oauth_server'];
         $response = $app['oauth_response'];
-        
+
         return $server->handleTokenRequest($app['request'], $response);
     }
 }

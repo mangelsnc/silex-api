@@ -4,7 +4,7 @@ namespace OAuth2Server\Controllers;
 
 use Silex\Application;
 
-class Authorize
+class AuthorizeController
 {
     static public function addRoutes($routing)
     {
