@@ -8,7 +8,7 @@ use OAuth2\HttpFoundationBridge\Response as BridgeResponse;
 use OAuth2\Server as OAuth2Server;
 use OAuth2\Storage\Pdo;
 use OAuth2\GrantType\AuthorizationCode;
-use OAuth2\GrantType\UserCredentials;
+use OAuth2\GrantType\ClientCredentials;
 
 class OAuth implements ControllerProviderInterface
 {
@@ -16,18 +16,9 @@ class OAuth implements ControllerProviderInterface
     {
         $storage = new Pdo(array('dsn' => 'sqlite:'.__DIR__.'/../../../data/albums.db'));
 
-        $grantTypes = array(
-            'user_credentials'   => new UserCredentials($storage),
-        );
-
-        $server = new OAuth2Server(
-                $storage, 
-                array(
-                    'enforce_state' => true, 
-                    'allow_implicit' => true
-                ), 
-                $grantTypes
-        );
+        $server = new OAuth2Server($storage);
+        $server->addGrantType(new ClientCredentials($storage));
+        $server->addGrantType(new AuthorizationCode($storage));
 
         $app['oauth_server'] = $server;
         $app['oauth_response'] = new BridgeResponse();
@@ -40,7 +31,7 @@ class OAuth implements ControllerProviderInterface
         $routing = $app['controllers_factory'];
 
         Controllers\Authorize::addRoutes($routing);
-        Controllers\Token::addRoutes($routing);
+        Controllers\TokenController::addRoutes($routing);
 
         return $routing;
     }
