@@ -22,7 +22,7 @@ class AlbumControllerTest extends WebTestCase
             '/albums', 
             array(), 
             array(), 
-            array('Accept' => 'application/xml')
+            array('HTTP_ACCEPT' => 'application/xml')
         );
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
