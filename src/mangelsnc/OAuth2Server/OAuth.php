@@ -30,7 +30,7 @@ class OAuth implements ControllerProviderInterface
 
         $routing = $app['controllers_factory'];
 
-        Controllers\Authorize::addRoutes($routing);
+        Controllers\AuthorizeController::addRoutes($routing);
         Controllers\TokenController::addRoutes($routing);
 
         return $routing;
