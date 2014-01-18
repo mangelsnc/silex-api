@@ -11,6 +11,7 @@ use Album\Controller\AlbumController;
 
 $app = new Silex\Application();
 $app['db.path'] = __DIR__ . '/../data/';
+$app['debug'] = true;
 
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
