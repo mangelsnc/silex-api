@@ -27,12 +27,12 @@ $app->before(function (Request $request) {
         $request->request->replace(is_array($data) ? $data : array());
     }
 
-    if('application/json' != $request->headers->get("Accept")) {
-        return new Response("Unsuported format", 400);
+    if('application/json' != $request->headers->get('Accept')) {
+        return new Response('Unsuported format', 400);
     }
 });
 
-$app->get("/", function(){
+$app->get('/', function(){
     return new Response();
 });
 
