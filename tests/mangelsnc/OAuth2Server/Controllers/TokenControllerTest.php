@@ -20,11 +20,11 @@ class TokenControllerTest extends WebTestCase
         $client->request(
             'POST', //Method
             '/oauth/token',  //URI
-            array() , //Parameters 
+            array(), //Parameters 
             array(), //Files
             array( //Headers
                 'HTTP_ACCEPT' => 'application/json',
-                'Content-Type' => 'application/x-www-form-urlencoded'
+                'CONTENT_TYPE' => 'application/x-www-form-urlencoded'
             ),
             'grant_type=client_credentials&client_id=testclient&client_secret=testpass' //Body
         );
